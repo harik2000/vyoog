@@ -1,17 +1,26 @@
-import './App.css';
+import React from "react";
 import Sidebar from "./sidebar";
-import React, { Component } from "react";
-import "./App.css";
+import Login from "./Login";
+import SignUp from "./SignUp";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+import PrivateRoute from "./PrivateRoute";
+import { AuthProvider } from "./Auth";
 
-
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-          <Sidebar />
-      </div>
-    );
-  }
+export default function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <div>
+          <PrivateRoute exact path="/" component={Sidebar} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/signup" component={SignUp} />
+        </div>
+      </Router>
+    </AuthProvider>
+  );
 }
-
-export default App;
