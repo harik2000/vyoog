@@ -4,44 +4,51 @@ import Collapse from 'react-bootstrap/Collapse'
 import VyoogLogo from './vyoog.png'
 import './sidebar.css'
 import HamburgerMenu from "react-hamburger-menu"
-import app from "./base";
+import db from "./base";
+import firebase from 'firebase';
 
-const dashboardItems = [
-    {
-        id: 1,
-        title: "Dashboard",
-        subtitles: ["Analysis", "Monitor", "Workplace"],
-    },
-    {
-        id: 2,
-        title: "Form",
-        subtitles: ["Basic Form", "Step Form", "Advanced Form"],
-    },
-    {
-        id: 3,
-        title: "List",
-        subtitles: ["Search Table", "Basic List", "Card List"],
-    },
-    {
-        id: 4,
-        title: "Profile",
-        subtitles: ["Basic Profile", "Advanced Profile"],
-    },
-    {
-        id: 5,
-        title: "Result",
-        subtitles: ["Success", "Failure"],
-    },
-    {
-        id: 6,
-        title: "Account",
-        subtitles: ["Account Center", "Account Settings"],
-    }
-];
+// const dashboardItems = [
+//     {
+//         id: 1,
+//         title: "Dashboard",
+//         subtitles: ["Analysis", "Monitor", "Workplace"],
+//     },
+//     {
+//         id: 2,
+//         title: "Form",
+//         subtitles: ["Basic Form", "Step Form", "Advanced Form"],
+//     },
+//     {
+//         id: 3,
+//         title: "List",
+//         subtitles: ["Search Table", "Basic List", "Card List"],
+//     },
+//     {
+//         id: 4,
+//         title: "Profile",
+//         subtitles: ["Basic Profile", "Advanced Profile"],
+//     },
+//     {
+//         id: 5,
+//         title: "Result",
+//         subtitles: ["Success", "Failure"],
+//     },
+//     {
+//         id: 6,
+//         title: "Account",
+//         subtitles: ["Account Center", "Account Settings"],
+//     }
+// ];
+let data = [];
+db.collection("dashboard")
+.get()
+.then(querySnapshot => {
+   data = querySnapshot.docs.map(doc => doc.data());
+});
 
 
 function Sidebar(){
-    const [open, setOpen] = React.useState(true);
+    const [open, setOpen] = React.useState(false);
 
     const [collapse, setCollapse] = React.useState({});
 
@@ -52,7 +59,6 @@ function Sidebar(){
         setOpen(prevState => !prevState)
         console.log("clicked" + open);
     }
-
     return (
         <div className="screen">
         <div id="SideBarContainer" className={open ? 'slideIn' : 'slideOut'}>
@@ -75,16 +81,16 @@ function Sidebar(){
                     <img src={VyoogLogo} alt="Vyoog Logo" className="vyooglogo"/>
                     <div className="VyoogTitle">Vyoog</div>
                 </MenuLogo>                
-            
-                {dashboardItems.map((postData) => {
+                
+                {data.map((postData) => {
                     return(
-                        <div key = {postData.id} className="Menu">
+                        <div key = {postData.title} className="Menu">
                             <SidebarMenuItem 
-                                onClick={() => handleClick(postData.id)}
+                                onClick={() => handleClick(postData.title)}
                             >
                                     <SidebarMenuItemLabel>{postData.title}</SidebarMenuItemLabel>
                             </SidebarMenuItem>
-                            <Collapse in={collapse[postData.id]}>
+                            <Collapse in={collapse[postData.title]}>
 
                                 <CollapsedText>
                                     {postData.subtitles.map((subtitle) => {
@@ -99,7 +105,7 @@ function Sidebar(){
                         </div>
                     );
                 })}
-                      <button onClick={() => app.auth().signOut()}>Sign out</button>
+                      <button onClick={() => firebase.auth().signOut()}>Sign out</button>
 
             </SidebarMenu>
         </div>

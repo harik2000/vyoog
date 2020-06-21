@@ -12,12 +12,15 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import firebase from 'firebase';
+
+
 const Login = ({ history }) => {
   const handleLogin = useCallback(async event => {
     event.preventDefault();
     const { email, password } = event.target.elements;
     try {
-      await app
+      await firebase
         .auth()
         .signInWithEmailAndPassword(email.value, password.value);
       history.push("/");
