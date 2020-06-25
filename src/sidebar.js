@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import Collapse from 'react-bootstrap/Collapse'
 import VyoogLogo from './vyoog.png'
@@ -7,60 +7,30 @@ import HamburgerMenu from "react-hamburger-menu"
 import db from "./base";
 import firebase from 'firebase';
 
-// const dashboardItems = [
-//     {
-//         id: 1,
-//         title: "Dashboard",
-//         subtitles: ["Analysis", "Monitor", "Workplace"],
-//     },
-//     {
-//         id: 2,
-//         title: "Form",
-//         subtitles: ["Basic Form", "Step Form", "Advanced Form"],
-//     },
-//     {
-//         id: 3,
-//         title: "List",
-//         subtitles: ["Search Table", "Basic List", "Card List"],
-//     },
-//     {
-//         id: 4,
-//         title: "Profile",
-//         subtitles: ["Basic Profile", "Advanced Profile"],
-//     },
-//     {
-//         id: 5,
-//         title: "Result",
-//         subtitles: ["Success", "Failure"],
-//     },
-//     {
-//         id: 6,
-//         title: "Account",
-//         subtitles: ["Account Center", "Account Settings"],
-//     }
-// ];
-let data = [];
-db.collection("dashboard")
-.get()
-.then(querySnapshot => {
-   data = querySnapshot.docs.map(doc => doc.data());
-});
-
 
 function Sidebar(){
+    const [data, setData] = React.useState([]);
+
     const [open, setOpen] = React.useState(false);
 
     const [collapse, setCollapse] = React.useState({});
+
+    useEffect(() => {
+        db.collection("dashboard")
+        .get()
+        .then(querySnapshot => {
+         console.log(data)
+         setData(querySnapshot.docs.map(doc => doc.data())); 
+      });
+     }, [])
 
     function handleClick(id) {
         setCollapse(prevState => ({...prevState, [id]: !prevState[id]}))
     }
     function handleHamburgerClick(){
         setOpen(prevState => !prevState)
-        console.log("clicked" + open);
     }
     return (
-        <div className="screen">
         <div id="SideBarContainer" className={open ? 'slideIn' : 'slideOut'}>
             <SidebarMenu>
 
@@ -108,7 +78,6 @@ function Sidebar(){
                       <button onClick={() => firebase.auth().signOut()}>Sign out</button>
 
             </SidebarMenu>
-        </div>
         </div>
     );
 }

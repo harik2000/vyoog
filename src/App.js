@@ -1,5 +1,5 @@
 import React from "react";
-import Sidebar from "./sidebar";
+import Dashboard from "./Dashboard";
 import Login from "./Login";
 import SignUp from "./SignUp";
 import {
@@ -16,7 +16,7 @@ export default function App() {
     <AuthProvider>
       <Router>
         <div>
-          <PrivateRoute exact path="/" component={Sidebar} />
+          <PrivateRoute exact path="/" component={Dashboard} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/signup" component={SignUp} />
         </div>
